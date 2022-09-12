@@ -728,6 +728,13 @@ async function make_chart(input, res) {
       " mv service.yaml " + CHART_NAME + "/templates"
     );
     result = await execute_shell_command(" chmod -R 770 " + CHART_NAME);
+    dir = "charts_DB"
+    if (!fs.existsSync(dir)) {
+        fs.mkdirSync(dir);
+    }
+    result = await execute_shell_command("zip -r "+CHART_NAME+".zip " + CHART_NAME)
+    result = await execute_shell_command("mv "+CHART_NAME+".zip "+" charts_DB")
+    res.download("charts_DB/"+CHART_NAME+".zip")
 
     return 1;
   }
