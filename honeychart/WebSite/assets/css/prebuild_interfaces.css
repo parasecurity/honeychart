@@ -1,0 +1,28 @@
+/* #dropdown-interfaces {} */
+
+body,
+html {
+  background-color: #5b5e63;
+  height: 100%;
+}
+
+#title {
+  text-align: center;
+}
+
+label {
+  color: #fff;
+  font-weight: bold;
+}
+
+#info-boxes {
+  position: absolute;
+  top: 150px;
+  left: 850px;
+  width: 400px;
+}
+
+#error-msg {
+  color: red;
+  font-weight: bold;
+}

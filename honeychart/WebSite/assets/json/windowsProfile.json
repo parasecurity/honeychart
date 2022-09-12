@@ -1,0 +1,19 @@
+{
+    "name": "windows-hp-chart",
+    "honeypots": {
+        "names": ["dionaea", "conpot"],
+        "dionaea": {
+            "volumes": ["/honeypot-logs/dionaea"],
+            "services": [{ "http": 80 }, { "smb": 445 }, { "ftp": 21 }],
+            "containerports": [80, 445, 21],
+            "protocols": ["TCP", "TCP", "TCP"]
+        },
+        "conpot": {
+            "volumes": ["/honeypot-logs/conpot"],
+            "services": [{ "modbus": 502 }, { "snmp": 161 }, { "s7comm": 102 }],
+            "containerports": [5020, 16100, 10201],
+            "protocols": ["TCP", "UDP", "TCP"]
+        }
+    },
+    "infoServiceText" : "Services:\nHTTP\nSMB\nFTP\nModbus\nSNMP\nS7comm"
+}

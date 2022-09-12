@@ -1,0 +1,55 @@
+#title {
+  text-align: center;
+}
+
+body {
+  background-color: #5b5e63;
+}
+
+#add-button {
+  color: #f5f5f5;
+  background-color: #474e58;
+  border-color: black;
+}
+
+label {
+  color: #fff;
+  font-weight: bold;
+}
+
+#intro-text {
+  color: rgb(255, 255, 255);
+}
+
+#info-boxes {
+  position: absolute;
+  top: 150px;
+  left: 800px;
+  width: 400px;
+  /* right: 30px; */
+  /* margin-top: -50px; */
+  /* this is half the height of your div*/
+  /* margin-left: -100px; */
+  /*this is half of width of your div*/
+}
+
+.clickable-img {
+  cursor: pointer;
+  width: 25px;
+  height: 25px;
+}
+
+#dio-error-msg {
+  color: red;
+  font-weight: bold;
+}
+
+#conpot-error-msg {
+  color: red;
+  font-weight: bold;
+}
+
+#cowrie-error-msg {
+  color: red;
+  font-weight: bold;
+}

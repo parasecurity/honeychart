@@ -1,0 +1,793 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <link rel="icon" type="image/png" href="../assets/img/honeycomb_ico.png">
+    <title>HoneyChart</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta charset="UTF-8">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet"
+        integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
+    <script src="../assets/js/custom_build.js" type="text/javascript"></script>
+    <script src="../assets/js/links.js" type="text/javascript"></script>
+    <script src="../assets/js/switches.js" type="text/javascript"></script>
+    <script src="../assets/js/request_api.js" type="text/javascript"></script>
+    <script src="../assets/js/validations.js" type="text/javascript"></script>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js"
+        integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM"
+        crossorigin="anonymous"></script>
+    <link rel="stylesheet" href="../assets/css/custom_build.css">
+</head>
+
+<body onload="init()">
+    <div class="container">
+        <div class="jumbotron" id="title">
+            <h1>HoneyChart</h1>
+        </div>
+    </div>
+    <div class="container">
+        <div class="row">
+            <div class="intro" id="intro-text">
+                <h4>Add honeypots to your chart</h4>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="dropdown col-10">
+                <button class="btn btn-secondary dropdown-toggle" type="button" id="custom-hp-menu"
+                    data-bs-toggle="dropdown" aria-expanded="false">
+                    Honeypots
+                </button>
+                <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton1">
+                    <li><a class="dropdown-item" href="#" id="dio-drop-menu" onclick="dionaea()">Dionaea</a></li>
+                    <li><a class="dropdown-item" href="#" id="conpot-drop-menu" onclick="conpot()">Conpot</a></li>
+                    <li><a class="dropdown-item" href="#" id="cowrie-drop-menu" onclick="cowrie()">Cowrie</a></li>
+                </ul>
+            </div>
+        </div>
+
+
+
+        <!-- Dionaea Services start-->
+        <div class="row d-none" id="dionaea_settings">
+
+            <!-- Name -->
+            <div class="row mt-4" id="dio-name-field">
+                <div class="col-2">
+                    <label class="name-label">Name</label>
+                </div>
+                <div class="col-2">
+                    <input type="name" class="form-control form-control-sm" id="dio-name" placeholder="myChart">
+                </div>
+                <div class=" col-1">
+                    <span class="tt" data-bs-placement="right" title="The name can contain 3-20 letters, numbers or '-'">
+                        <img class="clickable-img" src="../assets/img/question_mark_slim.png">
+                    </span>
+                </div>
+            </div>
+
+
+            <!-- HTTP -->
+            <div class="row  mt-4">
+                <div class="form-check form-switch col-2">
+                    <input class="form-check-input" type="checkbox" id="dio-http-switch" onchange="dionaeaSwitches('HTTP')">
+                    <label class="form-check-label" for="dio-http-switch" data-bs-toggle="tooltip" data-bs-placement="right" title="Tooltip on right">HTTP</label>
+                </div>
+                <div class=" col-1">
+                    <input type="number" class="form-control form-control-sm" id="dio-http-port"
+                        disabled="disabled" value="80">
+                </div>
+                <div class=" col-1">
+                    <span class="tt" data-bs-placement="right" title="Click for information on port 80">
+                        <img class="clickable-img" src="../assets/img/question_mark_slim.png" onclick="openLink('http')">
+                    </span>
+                </div>
+            </div>
+
+            <!-- HTTPS -->
+            <div class="row mt-4">
+                <div class="form-check form-switch col-2">
+                    <input class="form-check-input" type="checkbox" id="dio-https-switch" onchange="dionaeaSwitches('HTTPS')">
+                    <label class="form-check-label" for="dio-https-switch">HTTPS</label>
+                </div>
+                <div class=" col-1 ">
+                    <input type="number" class="form-control form-control-sm" id="dio-https-port"
+                    value="443" disabled="disabled">
+                </div>
+                <div class=" col-1">
+                    <span class="tt" data-bs-placement="right" title="Click for information on port 443">
+                        <img class="clickable-img" src="../assets/img/question_mark_slim.png" onclick="openLink('https')">
+                    </span>
+                </div>
+            </div>
+
+            <!-- SMB -->
+            <div class="row mt-4">
+                <div class="form-check form-switch col-2">
+                    <input class="form-check-input" type="checkbox" id="dio-smb-switch" onchange="dionaeaSwitches('SMB')">
+                    <label class="form-check-label" for="dio-smb-switch">SMB</label>
+                </div>
+                <div class=" col-1 ">
+                    <input type="number" class="form-control form-control-sm" id="dio-smb-port"
+                    value="445" disabled="disabled">
+                </div>
+                <div class=" col-1">
+                    <span class="tt" data-bs-placement="right" title="Click for information on port 445">
+                        <img class="clickable-img" src="../assets/img/question_mark_slim.png" onclick="openLink('smb')">
+                    </span>
+                </div>
+            </div>
+            
+            <!-- epmap -->
+            <div class="row mt-4">
+                <div class="form-check form-switch col-2">
+                    <input class="form-check-input" type="checkbox" id="dio-epmap-switch" onchange="dionaeaSwitches('epmap')">
+                    <label class="form-check-label" for="dio-epmap-switch">epmap</label>
+                </div>
+                <div class=" col-1 ">
+                    <input type="number" class="form-control form-control-sm" id="dio-epmap-port"
+                    value="135" disabled="disabled">
+                </div>
+                <div class=" col-1">
+                    <span class="tt" data-bs-placement="right" title="Click for information on port 135">
+                        <img class="clickable-img" src="../assets/img/question_mark_slim.png" onclick="openLink('epmap')">
+                    </span>
+                </div>
+            </div>
+            
+            <!-- FTP -->
+            <div class="row mt-4">
+                <div class="form-check form-switch col-2">
+                    <input class="form-check-input" type="checkbox" id="dio-ftp-switch" onchange="dionaeaSwitches('FTP')">
+                    <label class="form-check-label" for="dio-ftp-switch">FTP</label>
+                </div>
+                <div class=" col-1 ">
+                    <input type="number" class="form-control form-control-sm" id="dio-ftp-port"
+                    value="21" disabled="disabled">
+                </div>
+                <div class=" col-1">
+                    <span class="tt" data-bs-placement="right" title="Click for information on port 21">
+                        <img class="clickable-img" src="../assets/img/question_mark_slim.png" onclick="openLink('ftp')">
+                    </span>
+                </div>
+            </div>
+
+            <!-- TFTP -->
+            <div class="row mt-4">
+                <div class="form-check form-switch col-2">
+                    <input class="form-check-input" type="checkbox" id="dio-tftp-switch" onchange="dionaeaSwitches('TFTP')">
+                    <label class="form-check-label" for="dio-tftp-switch">TFTP</label>
+                </div>
+                <div class=" col-1 ">
+                    <input type="number" class="form-control form-control-sm" id="dio-tftp-port"
+                    value="69" disabled="disabled">
+                </div>
+                <div class=" col-1">
+                    <span class="tt" data-bs-placement="right" title="Click for information on port 69">
+                        <img class="clickable-img" src="../assets/img/question_mark_slim.png" onclick="openLink('tftp')">
+                    </span>
+                </div>
+            </div>
+
+            <!-- PPTP -->
+            <div class="row mt-4">
+                <div class="form-check form-switch col-2">
+                    <input class="form-check-input" type="checkbox" id="dio-pptp-switch" onchange="dionaeaSwitches('PPTP')">
+                    <label class="form-check-label" for="dio-pptp-switch">PPTP</label>
+                </div>
+                <div class=" col-1 ">
+                    <input type="number" class="form-control form-control-sm" id="dio-pptp-port"
+                    value="1723" disabled="disabled">
+                </div>
+                <div class=" col-1">
+                    <span class="tt" data-bs-placement="right" title="Click for information on port 1723">
+                        <img class="clickable-img" src="../assets/img/question_mark_slim.png" onclick="openLink('pptp')">
+                    </span>
+                </div>
+            </div>
+
+            <!-- MQTT -->
+            <div class="row mt-4">
+                <div class="form-check form-switch col-2">
+                    <input class="form-check-input" type="checkbox" id="dio-mqtt-switch" onchange="dionaeaSwitches('MQTT')">
+                    <label class="form-check-label" for="dio-mqtt-switch">MQTT</label>
+                </div>
+                <div class=" col-1 ">
+                    <input type="number" class="form-control form-control-sm" id="dio-mqtt-port"
+                    value="1883" disabled="disabled">
+                </div>
+                <div class=" col-1">
+                    <span class="tt" data-bs-placement="right" title="Click for information on port 1883">
+                        <img class="clickable-img" src="../assets/img/question_mark_slim.png" onclick="openLink('mqtt')">
+                    </span>
+                </div>
+            </div>
+
+            <!-- UPnP -->
+            <div class="row mt-4">
+                <div class="form-check form-switch col-2">
+                    <input class="form-check-input" type="checkbox" id="dio-upnp-switch" onchange="dionaeaSwitches('UPnP')">
+                    <label class="form-check-label" for="dio-upnp-switch">UPnP</label>
+                </div>
+                <div class=" col-1 ">
+                    <input type="number" class="form-control form-control-sm" id="dio-upnp-port"
+                    value="1900" disabled="disabled">
+                </div>
+                <div class=" col-1">
+                    <span class="tt" data-bs-placement="right" title="Click for information on port 1900">
+                        <img class="clickable-img" src="../assets/img/question_mark_slim.png" onclick="openLink('upnp')">
+                    </span>
+                </div>
+            </div>
+
+            <!-- MySQL -->
+            <div class="row mt-4">
+                <div class="form-check form-switch col-2">
+                    <input class="form-check-input" type="checkbox" id="dio-mysql-switch" onchange="dionaeaSwitches('MySQL')">
+                    <label class="form-check-label" for="dio-mysql-switch">MySQL</label>
+                </div>
+                <div class=" col-1 ">
+                    <input type="number" class="form-control form-control-sm" id="dio-mysql-port"
+                    value="3306" disabled="disabled">
+                </div>
+                <div class=" col-1">
+                    <span class="tt" data-bs-placement="right" title="Click for information on port 3306">
+                        <img class="clickable-img" src="../assets/img/question_mark_slim.png" onclick="openLink('mysql')">
+                    </span>
+                </div>
+            </div>
+
+            <!-- MSSQL -->
+            <div class="row mt-4">
+                <div class="form-check form-switch col-2">
+                    <input class="form-check-input" type="checkbox" id="dio-mssql-switch" onchange="dionaeaSwitches('MSSQL')">
+                    <label class="form-check-label" for="dio-mssql-switch">MS SQL</label>
+                </div>
+                <div class=" col-1 ">
+                    <input type="number" class="form-control form-control-sm" id="dio-mssql-port"
+                    value="1433" disabled="disabled">
+                </div>
+                <div class=" col-1">
+                    <span class="tt" data-bs-placement="right" title="Click for information on port 1433">
+                        <img class="clickable-img" src="../assets/img/question_mark_slim.png" onclick="openLink('mssql')">
+                    </span>
+                </div>
+            </div>
+
+            <!-- SIP-TCP (VoIP) -->
+            <div class="row mt-4">
+                <div class="form-check form-switch col-2">
+                    <input class="form-check-input" type="checkbox" id="dio-sip-tcp-switch" onchange="dionaeaSwitches('SIP-TCP')">
+                    <label class="form-check-label" for="dio-sip-tcp-switch">SIP TCP (VoIP)</label>
+                </div>
+                <div class=" col-1 ">
+                    <input type="number" class="form-control form-control-sm" id="dio-sip-tcp-port"
+                    value="5060" disabled="disabled">
+                </div>
+                <div class=" col-1">
+                    <span class="tt" data-bs-placement="right" title="Click for information on port 5060">
+                        <img class="clickable-img" src="../assets/img/question_mark_slim.png" onclick="openLink('siptcp')">
+                    </span>
+                </div>
+            </div>
+
+            <!-- SIP-UDP (VoIP) -->
+            <div class="row mt-4">
+                <div class="form-check form-switch col-2">
+                    <input class="form-check-input" type="checkbox" id="dio-sip-udp-switch" onchange="dionaeaSwitches('SIP-UDP')">
+                    <label class="form-check-label" for="dio-sip-udp-switch">SIP UDP (VoIP)</label>
+                </div>
+                <div class=" col-1 ">
+                    <input type="number" class="form-control form-control-sm" id="dio-sip-udp-port"
+                    value="5060" disabled="disabled">
+                </div>
+                <div class=" col-1">
+                    <span class="tt" data-bs-placement="right" title="Click for information on port 5060">
+                        <img class="clickable-img" src="../assets/img/question_mark_slim.png" onclick="openLink('sipudp')">
+                    </span>
+                </div>
+            </div>
+            
+            <!-- SIP-TLS (VoIP) -->
+            <div class="row mt-4">
+                <div class="form-check form-switch col-2">
+                    <input class="form-check-input" type="checkbox" id="dio-sip-tls-switch" onchange="dionaeaSwitches('SIP-TLS')">
+                    <label class="form-check-label" for="dio-sip-tls-switch">SIP TLS (VoIP)</label>
+                </div>
+                <div class=" col-1 ">
+                    <input type="number" class="form-control form-control-sm" id="dio-sip-tls-port"
+                    value="5061" disabled="disabled">
+                </div>
+                <div class=" col-1">
+                    <span class="tt" data-bs-placement="right" title="Click for information on port 5061">
+                        <img class="clickable-img" src="../assets/img/question_mark_slim.png" onclick="openLink('siptls')">
+                    </span>
+                </div>
+            </div>
+
+            <!-- Memcache -->
+            <div class="row mt-4">
+                <div class="form-check form-switch col-2">
+                    <input class="form-check-input" type="checkbox" id="dio-memcache-switch" onchange="dionaeaSwitches('Memcache')">
+                    <label class="form-check-label" for="dio-memcache-switch">Memcache</label>
+                </div>
+                <div class=" col-1 ">
+                    <input type="number" class="form-control form-control-sm" id="dio-memcache-port"
+                    value="11211" disabled="disabled">
+                </div>
+                <div class=" col-1">
+                    <span class="tt" data-bs-placement="right" title="Click for information on port 11211">
+                        <img class="clickable-img" src="../assets/img/question_mark_slim.png" onclick="openLink('memcache')">
+                    </span>
+                </div>
+            </div>
+
+            <!-- Nodeport or LB -->
+            <div class="row mt-4" id="dio-node-lb">
+                <div class="form-check col-3">
+                    <input class="form-check-input" type="radio" name="flexRadioDefault" id="dio-nodeport-check">
+                    <label class="form-check-label" for="dio-nodeport-check">
+                        Nodeport
+                    </label>
+                </div>
+                <div class="col-1">
+                    <span class="tt" data-bs-placement="right" title="Click for information on NodePort and LoadBalancer">
+                        <img class="clickable-img" src="../assets/img/question_mark_slim.png" onclick="openLink('nodeport')">
+                    </span>
+                </div>
+                <div class="row mt-4">
+                    <div class="form-check col-2">
+                        <input class="form-check-input" type="radio" name="flexRadioDefault" id="dio-lb-check">
+                        <label class="form-check-label" for="dio-lb-check">LoadBalancer</label>
+                    </div>
+                    <div class=" col-2">
+                        <input type="ip" class="form-control form-control-sm" id="dio-ip-field"
+                            placeholder="19.34.54.63">
+                    </div>
+                </div>
+            </div>
+
+            <!-- Replicas -->
+            <div class="row mt-3" id="dio-repl-field">
+                <div class=" col-2">
+                    <label for="replicas">Replicas</label><br>
+                </div>
+                <div class="col-2">
+                    <input type="number" class="form-control form-control-sm" id="dio-replicas"
+                        placeholder="1">
+                </div>
+                <div class=" col-1">
+                    <span class="tt" data-bs-placement="right" title="The number of replicas can be from 1 to 100">
+                        <img class="clickable-img" src="../assets/img/question_mark_slim.png">
+                    </span>
+                </div>
+            </div>
+
+            <!-- logpath -->
+            <div class="row mt-3">
+                <div class=" col-2">
+                    <label for="logs-path">Logs path (optional)</label><br>
+                </div>
+                <div class="col-2">
+                    <input type="text" class="form-control form-control-sm" id="dio-log-dir"
+                        placeholder="/logs">
+                </div>
+            </div>
+
+            <!-- Error Messages -->
+            <div class="row mt-4 d-none" id="dio-err-div">
+                <p id="dio-error-msg"></p>
+            </div>
+
+            <!-- ADD -->
+            <div class="row mt-4">
+                <div class="col-3"></div>
+                <button type="button" class="btn btn-primary col-1 " id="dio-add-button" onclick="addDionaea()">Add</button>
+            </div>
+
+        </div>
+        <!-- Dionaea services end -->
+
+
+        <!-- Conpot services start -->
+        <div class="row d-none" id="conpot_settings">
+            <!-- Name -->
+            <div class="row mt-4" id="conpot-name-field">
+                <div class="col-2">
+                    <label class="conpot-name-label">Name</label>
+                </div>
+                <div class="col-2">
+                    <input type="name" class="form-control form-control-sm" id="conpot-name" placeholder="myChart">
+                </div>
+                <div class=" col-1">
+                    <span class="tt" data-bs-placement="right" title="The name can contain 3-20 letters, numbers or '-'">
+                        <img class="clickable-img" src="../assets/img/question_mark_slim.png">
+                    </span>
+                </div>
+            </div>
+
+            <!-- HTTP -->
+            <div class="row  mt-4">
+                <div class="form-check form-switch col-2">
+                    <input class="form-check-input" type="checkbox" id="conpot-http-switch" onchange="conpotSwitches('HTTP')">
+                    <label class="form-check-label" for="conpot-http-switch">HTTP</label>
+                </div>
+                <div class=" col-1">
+                    <input type="number" class="form-control form-control-sm" id="conpot-http-port"
+                    value="80" disabled="disabled">
+                </div>
+                <div class=" col-1">
+                    <span class="tt" data-bs-placement="right" title="Click for information on port 80">
+                        <img class="clickable-img" src="../assets/img/question_mark_slim.png" onclick="openLink('http')">
+                    </span>
+                </div>
+            </div>
+
+            <!-- FTP -->
+            <div class="row  mt-4">
+                <div class="form-check form-switch col-2">
+                    <input class="form-check-input" type="checkbox" id="conpot-ftp-switch" onchange="conpotSwitches('FTP')">
+                    <label class="form-check-label" for="conpot-ftp-switch">FTP</label>
+                </div>
+                <div class=" col-1">
+                    <input type="number" class="form-control form-control-sm" id="conpot-ftp-port"
+                    value="21" disabled="disabled">
+                </div>
+                <div class=" col-1">
+                    <span class="tt" data-bs-placement="right" title="Click for information on port 21">
+                        <img class="clickable-img" src="../assets/img/question_mark_slim.png" onclick="openLink('ftp')">
+                    </span>
+                </div>
+            </div>
+
+            <!-- TFTP -->
+            <div class="row  mt-4">
+                <div class="form-check form-switch col-2">
+                    <input class="form-check-input" type="checkbox" id="conpot-tftp-switch" onchange="conpotSwitches('TFTP')">
+                    <label class="form-check-label" for="conpot-tftp-switch">TFTP</label>
+                </div>
+                <div class=" col-1">
+                    <input type="number" class="form-control form-control-sm" id="conpot-tftp-port"
+                    value="69" disabled="disabled">
+                </div>
+                <div class=" col-1">
+                    <span class="tt" data-bs-placement="right" title="Click for information on port 69">
+                        <img class="clickable-img" src="../assets/img/question_mark_slim.png" onclick="openLink('tftp')">
+                    </span>
+                </div>
+            </div>
+
+            <!-- Modbus -->
+            <div class="row  mt-4">
+                <div class="form-check form-switch col-2">
+                    <input class="form-check-input" type="checkbox" id="conpot-modbus-switch" onchange="conpotSwitches('Modbus')">
+                    <label class="form-check-label" for="conpot-modbus-switch">Modbus</label>
+                </div>
+                <div class=" col-1">
+                    <input type="number" class="form-control form-control-sm" id="conpot-modbus-port"
+                    value="502" disabled="disabled">
+                </div>
+                <div class=" col-1">
+                    <span class="tt" data-bs-placement="right" title="Click for information on port 502">
+                        <img class="clickable-img" src="../assets/img/question_mark_slim.png" onclick="openLink('modbus')">
+                    </span>
+                </div>
+            </div>
+
+            <!-- SNMP -->
+            <div class="row  mt-4">
+                <div class="form-check form-switch col-2">
+                    <input class="form-check-input" type="checkbox" id="conpot-snmp-switch" onchange="conpotSwitches('SNMP')">
+                    <label class="form-check-label" for="conpot-snmp-switch">SNMP</label>
+                </div>
+                <div class=" col-1">
+                    <input type="number" class="form-control form-control-sm" id="conpot-snmp-port"
+                    value="161" disabled="disabled">
+                </div>
+                <div class=" col-1">
+                    <span class="tt" data-bs-placement="right" title="Click for information on port 161">
+                        <img class="clickable-img" src="../assets/img/question_mark_slim.png" onclick="openLink('snmp')">
+                    </span>
+                </div>
+            </div>
+            
+            <!-- S7comm -->
+            <div class="row  mt-4">
+                <div class="form-check form-switch col-2">
+                    <input class="form-check-input" type="checkbox" id="conpot-s7comm-switch" onchange="conpotSwitches('S7comm')">
+                    <label class="form-check-label" for="conpot-s7comm-switch">S7comm</label>
+                </div>
+                <div class=" col-1">
+                    <input type="number" class="form-control form-control-sm" id="conpot-s7comm-port"
+                    value="102" disabled="disabled">
+                </div>
+                <div class=" col-1">
+                    <span class="tt" data-bs-placement="right" title="Click for information on port 102">
+                        <img class="clickable-img" src="../assets/img/question_mark_slim.png" onclick="openLink('s7comm')">
+                    </span>
+                </div>
+            </div>
+
+            <!-- BACnet -->
+            <div class="row  mt-4">
+                <div class="form-check form-switch col-2">
+                    <input class="form-check-input" type="checkbox" id="conpot-bacnet-switch" onchange="conpotSwitches('BACnet')">
+                    <label class="form-check-label" for="conpot-bacnet-switch">BACnet</label>
+                </div>
+                <div class=" col-1">
+                    <input type="number" class="form-control form-control-sm" id="conpot-bacnet-port"
+                    value="47808" disabled="disabled">
+                </div>
+                <div class=" col-1">
+                    <span class="tt" data-bs-placement="right" title="Click for information on port 47808">
+                        <img class="clickable-img" src="../assets/img/question_mark_slim.png" onclick="openLink('bacnet')">
+                    </span>
+                </div>
+            </div>
+
+            <!-- IPMI -->
+            <div class="row  mt-4">
+                <div class="form-check form-switch col-2">
+                    <input class="form-check-input" type="checkbox" id="conpot-ipmi-switch" onchange="conpotSwitches('IPMI')">
+                    <label class="form-check-label" for="conpot-ipmi-switch">IPMI</label>
+                </div>
+                <div class=" col-1">
+                    <input type="number" class="form-control form-control-sm" id="conpot-ipmi-port"
+                    value="623" disabled="disabled">
+                </div>
+                <div class=" col-1">
+                    <span class="tt" data-bs-placement="right" title="Click for information on port 623">
+                        <img class="clickable-img" src="../assets/img/question_mark_slim.png" onclick="openLink('ipmi')">
+                    </span>
+                </div>
+            </div>
+
+            <!-- EnIP -->
+            <div class="row  mt-4">
+                <div class="form-check form-switch col-2">
+                    <input class="form-check-input" type="checkbox" id="conpot-enip-switch" onchange="conpotSwitches('enip')">
+                    <label class="form-check-label" for="conpot-enip-switch">Ethernet/IP(enip)</label>
+                </div>
+                <div class=" col-1">
+                    <input type="number" class="form-control form-control-sm" id="conpot-enip-port"
+                    value="44818" disabled="disabled">
+                </div>
+                <div class=" col-1">
+                    <span class="tt" data-bs-placement="right" title="Click for information on port 44818">
+                        <img class="clickable-img" src="../assets/img/question_mark_slim.png" onclick="openLink('enip')">
+                    </span>
+                </div>
+            </div>
+
+            <!-- Nodeport or LB -->
+            <div class="row mt-4" id="conpot-node-lb">
+                <div class="form-check col-3">
+                    <input class="form-check-input" type="radio" name="flexRadioDefault" id="conpot-nodeport-check">
+                    <label class="form-check-label" for="conpot-nodeport-check">
+                        Nodeport
+                    </label>
+                </div>
+                <div class="col-1">
+                    <span class="tt" data-bs-placement="right" title="Click for information on NodePort and LoadBalancer">
+                        <img class="clickable-img" src="../assets/img/question_mark_slim.png" onclick="openLink('nodeport')">
+                    </span>
+                </div>
+                <div class="row mt-3">
+                    <div class="form-check col-2">
+                        <input class="form-check-input" type="radio" name="flexRadioDefault" id="conpot-lb-check">
+                        <label class="form-check-label" for="conpot-lb-check">
+                            LoadBalancer
+                        </label>
+                    </div>
+                    <div class=" col-2">
+                        <input type="ip" class="form-control form-control-sm" id="conpot-ip-field"
+                            placeholder="19.34.54.63">
+                    </div>
+                </div>
+            </div>
+
+            <!-- Replicas -->
+            <div class="row mt-3" id="conpot-repl-field">
+                <div class="col-2">
+                    <label for="replicas">Replicas</label><br>
+                </div>
+                <div class="col-2">
+                    <input type="number" class="form-control form-control-sm" id="conpot-replicas"
+                        placeholder="1">
+                </div>
+                <div class=" col-1">
+                    <span class="tt" data-bs-placement="right" title="The number of replicas can be from 1 to 100">
+                        <img class="clickable-img" src="../assets/img/question_mark_slim.png">
+                    </span>
+                </div>
+            </div>
+
+            <!-- logpath -->
+            <div class="row mt-3">
+                <div class=" col-2">
+                    <label for="logs-path">Logs path (optional)</label><br>
+                </div>
+                <div class="col-2">
+                    <input type="text" class="form-control form-control-sm" id="conpot-log-dir"
+                        placeholder="/logs">
+                </div>
+            </div>
+
+            <!-- Error Messages -->
+            <div class="row mt-4 d-none" id="conpot-err-div">
+                <p id="conpot-error-msg"></p>
+            </div>
+
+            <!-- ADD -->
+            <div class="row mt-4">
+                <div class="col-3"></div>
+                <button type="button" class="btn btn-primary col-1 " id="conpot-add-button" onclick="addConpot()">Add</button>
+            </div>
+        </div>
+        <!-- Conpot services end -->
+
+        <!-- Cowrie services start-->
+        <div class="row d-none" id="cowrie_settings">
+            <!-- Name -->
+            <div class="row mt-4" id="cowrie-name-field">
+                <div class="col-2">
+                    <label class="cowrie-name-label">Name</label>
+                </div>
+                <div class="col-2">
+                    <input type="name" class="form-control form-control-sm" id="cowrie-name" placeholder="myChart">
+                </div>
+                <div class=" col-1">
+                    <span class="tt" data-bs-placement="right" title="The name can contain 3-20 letters, numbers or '-'">
+                        <img class="clickable-img" src="../assets/img/question_mark_slim.png">
+                    </span>
+                </div>
+            </div>
+            <!-- SSH -->
+            <div class="row  mt-4">
+                <div class="form-check form-switch col-2">
+                    <input class="form-check-input" type="checkbox" id="cowrie-ssh-switch" onchange="cowrieSwitches('SSH')">
+                    <label class="form-check-label" for="cowrie-ssh-switch">SSH</label>
+                </div>
+                <div class=" col-1">
+                    <input type="number" class="form-control form-control-sm" id="cowrie-ssh-port"
+                    value="22" disabled="disabled">
+                </div>
+                <div class=" col-1">
+                    <span class="tt" data-bs-placement="right" title="Click for information on port 22">
+                        <img class="clickable-img" src="../assets/img/question_mark_slim.png" onclick="openLink('ssh')">
+                    </span>
+                </div>
+            </div>
+
+            <!-- Telnet -->
+            <div class="row  mt-4">
+                <div class="form-check form-switch col-2">
+                    <input class="form-check-input" type="checkbox" id="cowrie-telnet-switch" onchange="cowrieSwitches('Telnet')">
+                    <label class="form-check-label" for="cowrie-telnet-switch">Telnet</label>
+                </div>
+                <div class=" col-1">
+                    <input type="number" class="form-control form-control-sm" id="cowrie-telnet-port"
+                    value="23" disabled="disabled">
+                </div>
+                <div class=" col-1">
+                    <span class="tt" data-bs-placement="right" title="Click for information on port 23">
+                        <img class="clickable-img" src="../assets/img/question_mark_slim.png" onclick="openLink('telnet')">
+                    </span>
+                </div>
+            </div>
+
+            <!-- Nodeport or LB -->
+            <div class="row mt-4" id="cowrie-node-lb">
+                <div class="form-check col-3">
+                    <input class="form-check-input" type="radio" name="flexRadioDefault" id="cowrie-nodeport-check">
+                    <label class="form-check-label" for="cowrie-nodeport-check">
+                        Nodeport
+                    </label>
+                </div>
+                <div class="col-1">
+                    <span class="tt" data-bs-placement="right" title="Click for information on NodePort and LoadBalancer">
+                        <img class="clickable-img" src="../assets/img/question_mark_slim.png" onclick="openLink('nodeport')">
+                    </span>
+                </div>
+                <div class="row mt-3">
+                    <div class="form-check col-2">
+                        <input class="form-check-input" type="radio" name="flexRadioDefault" id="cowrie-lb-check">
+                        <label class="form-check-label" for="cowrie-lb-check">
+                            LoadBalancer
+                        </label>
+                    </div>
+                    <div class=" col-2">
+                        <input type="ip" class="form-control form-control-sm" id="cowrie-ip-field"
+                            placeholder="19.34.54.63">
+                    </div>
+                </div>
+            </div>
+
+            <!-- Replicas -->
+            <div class="row mt-3" id="cowrie-repl-field">
+                <div class="col-2">
+                    <label for="replicas">Replicas</label><br>
+                </div>
+                <div class="col-2">
+                    <input type="number" class="form-control form-control-sm" id="cowrie-replicas"
+                        placeholder="1">
+                </div>
+                <div class=" col-1">
+                    <span class="tt" data-bs-placement="right" title="The number of replicas can be from 1 to 100">
+                        <img class="clickable-img" src="../assets/img/question_mark_slim.png">
+                    </span>
+                </div>
+            </div>
+
+            <!-- logpath -->
+            <div class="row mt-3">
+                <div class=" col-2">
+                    <label for="logs-path">Logs path (optional)</label><br>
+                </div>
+                <div class="col-2">
+                    <input type="text" class="form-control form-control-sm" id="cowrie-log-dir"
+                        placeholder="/logs">
+                </div>
+            </div>
+
+            <!-- Error Messages -->
+            <div class="row mt-4 d-none" id="cowrie-err-div">
+                <p id="cowrie-error-msg"></p>
+            </div>
+
+            <!-- ADD -->
+            <div class="row mt-4">
+                <div class="col-3"></div>
+                <button type="button" class="btn btn-primary col-1 " id="cowrie-add-button" onclick="addCowrie()">Add</button>
+            </div>
+        </div>
+
+        <!-- Cowrie services end-->
+
+
+        <!-- Choices before deployment -->
+        <div class="container" id="info-boxes">
+            
+            <!-- Chart information -->
+            <div class="alert alert-success d-none" id="info-chart" role="alert">
+                <h4 class="alert-heading">Your Chart</h4>
+                <p id="chart-name"></p>
+                <p id="chart-service"></p>
+                <p id="chart-replicas"></p>
+            </div>
+
+            
+            <!-- Dionaea information -->
+            <div class="alert alert-success d-none" id="dio-info" role="alert">
+                <h4 class="alert-heading">Dionaea settings</h4>
+                <p style="white-space: pre;" id="dio-i-services"></pre>
+                <p id="dio-i-hostpath"></p>
+                <p id="dio-i-replicas"></p>
+            </div>
+
+            <!-- Conpot information -->
+            <div class="alert alert-success d-none" id="conpot-info" role="alert">
+                <h4 class="alert-heading">Conpot settings</h4>
+                <p style="white-space: pre;" id="conpot-i-services"></pre>
+                <p id="conpot-i-hostpath"></p>
+                <p id="conpot-i-replicas"></p>
+            </div>
+            
+            <!-- Cowrie information -->
+            <div class="alert alert-success d-none" id="cowrie-info" role="alert">
+                <h4 class="alert-heading">Cowrie settings</h4>
+                <p style="white-space: pre;" id="cowrie-i-services"></pre>
+                <p id="cowrie-i-hostpath"></p>
+                <p id="cowrie-i-replicas"></p>
+            </div>
+
+            <!-- Create button -->
+            <div class="col-4">
+                <button type="button" class="btn btn-primary d-none" id="create-chart" onclick="send_chart()">Create</button>
+            </div>
+        </div>
+    </div>
+</body>
+</html>
