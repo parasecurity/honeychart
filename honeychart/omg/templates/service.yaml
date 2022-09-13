@@ -1,0 +1,14 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: {{ include "omg.fullname" .  }}
+  labels: {{- include "omg.labels" . | nindent 4 }}
+spec:
+  type: {{ .Values.service.type }}
+  externalTrafficPolicy: {{ .Values.service.extTrafficPolicy }}
+  ports:
+    - port: {{ .Values.honeypots.cowrie.ports.portssh }}
+      targetPort: {{ .Values.honeypots.cowrie.ports.containerPortssh }}
+      protocol: {{ .Values.honeypots.cowrie.ports.protocolssh}}
+      name: {{ .Values.honeypots.cowrie.ports.namessh }}
+  selector: {{- include "omg.selectorLabels" . | nindent 4 }}
