@@ -5,6 +5,14 @@ var first = 1; //functions as a flag for the first addition
 var node = -1; //functions as a flag for the service (nodeport or load balancer)
 var ip = ""; //stores the load balancer IP
 
+// Regular expressions for validity checks
+// var nameCheck = new RegExp("^([a-zA-Z0-9-]{3,20}$)");
+// var portNumbers = new RegExp("^([0-9]{1,5}$)");
+// var ipCheck = new RegExp(
+//   "^(([1-9]?\\d|1\\d\\d|2[0-5][0-5]|2[0-4]\\d)\\.){3}([1-9]?\\d|1\\d\\d|2[0-5][0-5]|2[0-4]\\d)$"
+// );
+// var replicaCheck = new RegExp("^([1-9]|[1-9][0-9]|100)$");
+
 // Stores chart info
 var data = {
   name: "",
@@ -705,10 +713,19 @@ function generateInfo(hp) {
 }
 
 //url="https://webhook.site/930450c6-96b8-429d-85cd-89f068bc3f4a"
-var url = "http://localhost:8081/custom_build_endpoint";
+//var url = "http://localhost:8081/custom_build_endpoint";
+var url = "http://139.91.71.18:8081/custom_build_endpoint"
 
 function callback(response) {
-  console.log(response);
+  //console.log(typeof response)
+  a = document.createElement('a');
+  a.href = window.URL.createObjectURL(response);
+  // Give filename you wish to download
+  a.download = data.name + ".zip";
+  a.style.display = 'none';
+  document.body.appendChild(a);
+  a.click();
+  //window.open(url+"/fdd.zip",'_blank'    );
 }
 
 function send_chart() {

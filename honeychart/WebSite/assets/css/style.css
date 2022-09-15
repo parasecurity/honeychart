@@ -1,5 +1,6 @@
 #title {
-  text-align: center
+  text-align: center;
+  color: white;
 }
 
 .alert {
@@ -7,16 +8,28 @@
   border: #969dac;
 }
 
-
+.navbar {
+  background-color: #ffbd15;
+  height: 70px;
+}
 
 body {
-  background-color: #5b5e63;
+  background-color: #dbc58d;
+}
+    
+.options-button {
+  height: 100px;
+  background-color: #ffbd15;
+  color: black;
+   font-weight: bold;
+  border: none;
 }
 
 #add-button {
   color: #f5f5f5;
   background-color: #474e58;
   border-color: black;
+  
 }
 
 label {

@@ -73,7 +73,7 @@ function change_interfaces_text(text) {
 function Windows() {
   resetData();
   var interfaceName = "Windows";
-  fetchProfile("./assets/json/windowsProfile.json");
+  fetchProfile("../assets/json/windowsProfile.json");
   document.getElementById("extras").classList.remove("d-none");
   change_interfaces_text(interfaceName);
   selected_interface = "windows";
@@ -156,10 +156,19 @@ function generate_info(profile, info_text) {
   services.innerHTML = info_text;
 }
 
-var url = "http://localhost:8081/prebuild_interface_endpoint";
+url="http://139.91.71.18:8081/prebuild_interface_endpoint"
 
-function callback(response) {
-  console.log(response);
+
+function callback(response){
+    //console.log(typeof response)
+    a = document.createElement('a');
+    a.href = window.URL.createObjectURL(response);
+    // Give filename you wish to download
+    a.download = data.name+".zip";
+    a.style.display = 'none';
+    document.body.appendChild(a);
+    a.click();
+    //window.open(url+"/fdd.zip",'_blank'    );
 }
 
 // Send chart to server

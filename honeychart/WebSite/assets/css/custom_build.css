@@ -3,7 +3,8 @@
 }
 
 body {
-  background-color: #5b5e63;
+  background-color: #dbc58d;
+  font-weight: bold;
 }
 
 #add-button {
@@ -12,26 +13,55 @@ body {
   border-color: black;
 }
 
-label {
-  color: #fff;
+.navbar {
+  background-color: #ffbd15;
+  height: 70px;
+}
+
+.add-button {
+  background-color: #ffbd15;
+  border-color: black;
+  color: black;
   font-weight: bold;
 }
 
-#intro-text {
-  color: rgb(255, 255, 255);
+label {
+  color: rgb(0, 0, 0);
+  font-weight: bold;
+  padding: 0;
 }
 
+#intro-text {
+  color: rgb(0, 0, 0);
+}
+
+.alert {
+  background-color: #ffbd15;
+}
+
+.clickable-img {
+  width: 20px;
+  height: 20px;
+}
+
+/*
 #info-boxes {
   position: absolute;
   top: 150px;
   left: 800px;
-  width: 400px;
-  /* right: 30px; */
-  /* margin-top: -50px; */
-  /* this is half the height of your div*/
-  /* margin-left: -100px; */
-  /*this is half of width of your div*/
-}
+  width: 400px;*/
+
+/* right: 30px; */
+
+/* margin-top: -50px; */
+
+/* this is half the height of your div*/
+
+/* margin-left: -100px; */
+
+/*this is half of width of your div*/
+
+/*}*/
 
 .clickable-img {
   cursor: pointer;

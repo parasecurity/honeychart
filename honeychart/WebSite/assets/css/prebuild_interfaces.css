@@ -1,28 +1,36 @@
-/* #dropdown-interfaces {} */
-
 body,
 html {
-  background-color: #5b5e63;
-  height: 100%;
+  background-color: #dbc58d;
+  font-weight: bold;
 }
 
-#title {
-  text-align: center;
+.alert {
+  background-color: #ffbd15;
+}
+
+.navbar {
+  background-color: #ffbd15;
+  height: 70px;
 }
 
 label {
-  color: #fff;
+  color: rgb(0, 0, 0);
   font-weight: bold;
+  padding: 0;
 }
-
-#info-boxes {
+#create-chart {
   position: absolute;
-  top: 150px;
-  left: 850px;
-  width: 400px;
+  margin: 0 auto;
+  left: 90;
+  right: 0;
+  text-align: center;
+  bottom: 10px;
 }
 
-#error-msg {
-  color: red;
-  font-weight: bold;
+
+
+.btn:focus,
+.btn:active {
+  outline: none !important;
+  border: none !important;
 }
