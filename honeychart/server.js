@@ -5,6 +5,8 @@ const path = require("path");
 const chart_creator = require("./create_charts.js");
 
 const host = "localhost";
+//const host = "10.0.0.250";
+
 
 //const host = '139.91.71.18';
 const port = 8081;

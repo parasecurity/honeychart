@@ -734,6 +734,8 @@ async function make_chart(input, res) {
     }
     result = await execute_shell_command("zip -r "+CHART_NAME+".zip " + CHART_NAME)
     result = await execute_shell_command("mv "+CHART_NAME+".zip "+" charts_DB")
+    result = await execute_shell_command("rm -rf "+CHART_NAME)
+
     
     //res.download("charts_DB/"+CHART_NAME+".zip")
     res.download("charts_DB/"+CHART_NAME+".zip")

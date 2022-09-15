@@ -8,7 +8,7 @@ In details, HoneyChart uses a friendly user interface, that saves the user from 
 HoneyChart, is perfect for people that want to easily and fast deploy honeypots to their kubernetes cluster.
 
 # Installation
-To run Honeychart you will need node.js, npm and helm. After install npm and node.js install the packages and run the HoneyChart server
+To run Honeychart you will need linux, node.js, npm and helm. After install npm and node.js install the packages and run the HoneyChart server
 
 ```
 sudo snap install helm --classic
