@@ -12,9 +12,8 @@ To run Honeychart you will need linux, node.js, npm and helm. After install npm 
 
 ```
 sudo snap install helm --classic
-npm install express
-npm install js-yaml
 git clone https://github.com/parasecurity/honeychart/
 cd honeychart
+npm i 
 node server.js
 ```
