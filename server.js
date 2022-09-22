@@ -2,7 +2,7 @@ const http = require("http");
 const express = require("express");
 const app = express();
 const path = require("path");
-const chart_creator = require("./create_charts.js");
+const chart_creator = require("./src/create_charts.js");
 
 const host = "localhost";
 
@@ -14,21 +14,21 @@ var server = app.listen(port, host, function () {
 });
 
 app.use(express.json());
-app.use(express.static(path.join(__dirname, "WebSite")));
+app.use(express.static(path.join(__dirname, "website")));
 
 // sendFile will go here
 app.get("/", function (req, res) {
-  const index = path.join(__dirname, "WebSite/views", "first_screen.html");
+  const index = path.join(__dirname, "website/views", "first_screen.html");
   res.sendFile(index);
 });
 app.get("/custom_build", function (req, res) {
-  const index = path.join(__dirname, "WebSite/views", "custom_build.html");
+  const index = path.join(__dirname, "website/views", "custom_build.html");
   res.sendFile(index);
 });
 app.get("/prebuild_interfaces", function (req, res) {
   const index = path.join(
     __dirname,
-    "WebSite/views",
+    "website/views",
     "prebuild_interfaces.html"
   );
   res.sendFile(index);
