@@ -14,21 +14,21 @@ var server = app.listen(port, host, function () {
 });
 
 app.use(express.json());
-app.use(express.static(path.join(__dirname, "website")));
+app.use(express.static(path.join(__dirname, "frontend")));
 
 // sendFile will go here
 app.get("/", function (req, res) {
-  const index = path.join(__dirname, "website/views", "first_screen.html");
+  const index = path.join(__dirname, "frontend/views", "first_screen.html");
   res.sendFile(index);
 });
 app.get("/custom_build", function (req, res) {
-  const index = path.join(__dirname, "website/views", "custom_build.html");
+  const index = path.join(__dirname, "frontend/views", "custom_build.html");
   res.sendFile(index);
 });
 app.get("/prebuild_interfaces", function (req, res) {
   const index = path.join(
     __dirname,
-    "website/views",
+    "frontend/views",
     "prebuild_interfaces.html"
   );
   res.sendFile(index);
