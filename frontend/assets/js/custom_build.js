@@ -713,7 +713,7 @@ function generateInfo(hp) {
 }
 
 //url="https://webhook.site/930450c6-96b8-429d-85cd-89f068bc3f4a"
-var url = "http://localhost:8081/custom_build_endpoint";
+var url = "{MAIN_URL}/custom_build_endpoint";
 //var url = "http://139.91.71.18:8081/custom_build_endpoint"
 
 

@@ -156,7 +156,7 @@ function generate_info(profile, info_text) {
   services.innerHTML = info_text;
 }
 
-url="http://139.91.71.18:8081/prebuild_interface_endpoint"
+url="{MAIN_URL}/prebuild_interface_endpoint"
 
 
 function callback(response){

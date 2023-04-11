@@ -3,17 +3,41 @@ const express = require("express");
 const app = express();
 const path = require("path");
 const chart_creator = require("./src/create_charts.js");
+const fs = require("fs");
+const host_data = require("./host.json")
 
-const host = "localhost";
-
-
+const host = host_data["host"];
 //const host = '139.91.71.18';
-const port = 8081;
+const port = host_data["port"];
+const url = "http://" + host + ":" + port
+
 var server = app.listen(port, host, function () {
   console.log("Example app listening at http://%s:%s", host, port);
 });
 
 app.use(express.json());
+
+// Custom middleware function to modify a JavaScript file
+function modifyJavaScriptFile(req, res, next) {
+  if (req.url.endsWith(".js")) {
+    const filePath = path.join(__dirname, "frontend", req.url);
+    fs.readFile(filePath, "utf8", (err, data) => {
+      if (err) {
+        return next(err);
+      }
+
+      // Replace the placeholders with the actual values
+      const modifiedData = data.replace("{MAIN_URL}", url);
+      res.type("text/javascript").send(modifiedData);
+    });
+  } else {
+    next();
+  }
+}
+
+
+// Use the custom middleware function to serve the directory
+app.use(modifyJavaScriptFile);
 app.use(express.static(path.join(__dirname, "frontend")));
 
 // sendFile will go here
