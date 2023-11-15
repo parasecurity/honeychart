@@ -9,6 +9,7 @@ const { exec } = require("child_process");
 const { count } = require("console");
 const { mainModule } = require("process");
 const { json } = require("express");
+const ip = require('ip');
 
 let CHART_NAME;
 let generic_values;
@@ -403,6 +404,18 @@ function write_json_to_yaml_file(filename, json_object) {
 
   fs.writeFileSync(filename, yamlStr, "utf8");
 }
+function append_json_to_yaml_file(filename, json_object) {
+  let yamlStr = yaml.dump(json_object);
+  yamlStr = create_same_names(yamlStr);
+  yamlStr = eliminate_useless_characters(yamlStr);
+
+  fs.appendFileSync(filename, yamlStr, "utf8");
+}
+function append_service_yaml(filename, json_object) {
+  const pad = "\n---\n"
+  fs.appendFileSync(filename, pad, "utf8");
+  append_json_to_yaml_file(filename, json_object)
+}
 /* because json object doesnt allow  same keys , i put a number front of each duplicate key 
     and i delete this number before the file is ready
     example: we have many ports like
@@ -641,6 +654,52 @@ function has_conpot(input) {
 function has_cowrie(input) {
   return input.honeypots.names.includes("cowrie");
 }
+
+function isValidIPv4(ip) {
+  // Regular expression for IPv4
+  //const ipv4Regex = /^(?:[0-9]{1,3}\.){3}[0-9]{1,3}$/;
+  const ipv4Regex = new RegExp('^(?:[0-9]{1,3}\\.){3}[0-9]{1,3}$');
+  return ipv4Regex.test(ip);
+}
+
+// Function to convert a range string to a list of IPs
+function rangeToIPs(rangeStr) {
+  const IPsInRange = rangeStr.split('-')
+  // initial checks
+  if (IPsInRange.length == 0){
+    return [] // does it ever comes here?
+  }
+  else if (IPsInRange.length == 1){
+    if (isValidIPv4(IPsInRange[0])){
+      return IPsInRange
+    }
+    return []
+  }
+  
+  // if length > 2 get only first 2
+  const [startIP, endIP] = IPsInRange.slice(0,2).map(ip => ip.trim());
+  if(!isValidIPv4(startIP) || !isValidIPv4(endIP)){
+    return []
+  }
+  const startLong = ip.toLong(startIP);
+  const endLong = ip.toLong(endIP);
+  // this ip range corresponds to a single ip
+  if (startLong == endLong){
+    return [ip.fromLong(startLong)]
+  }
+  // invalid ip range
+  else if (startLong > endLong){
+    return []
+  }
+  
+  const result = [];
+  for (let i = startLong; i <= endLong; i++) {
+    result.push(ip.fromLong(i));
+  }
+
+  return result;
+}
+
 function create_chart(honeypot) {
   fill_volumes(honeypot);
 
@@ -664,14 +723,30 @@ function create_chart(honeypot) {
 
   if (is_service_type_load_balancer(honeypot)) {
     generic_values.service.type = "LoadBalancer";
-    generic_values.service["lbIP"] = honeypot.service.lbIp;
-    generic_service.spec["loadBalancerIP"] = "{{ .Values.service.lbIP }}";
+    generic_service.spec["allocateLoadBalancerNodePorts"] = false // better not allocate these ports by default
+    // Different IP ranges are seperated with comma
+    const lbIP_ranges = honeypot.service.lbIp.split(',').map(range => range.trim());
+    // For each range, generate its corresponding unique IP addresses
+    const ipList = [...new Set(lbIP_ranges.flatMap(rangeToIPs))];
+    generic_values.service["lbIP"] = ipList;
+    for (let i = 0; i < ipList.length; i++){
+      let generic_service_tmp = JSON.parse(JSON.stringify(generic_service))
+      generic_service_tmp.metadata["name"] = generic_service_tmp.metadata["name"] + i
+      generic_service_tmp.spec["loadBalancerIP"] = "{{ index .Values.service.lbIP " + i + " }}";
+      if (i == 0){
+        write_json_to_yaml_file("service.yaml", generic_service_tmp);
+      }
+      else{
+        append_service_yaml("service.yaml", generic_service_tmp);
+      }
+    }
   } else {
     generic_values.service.type = "NodePort";
+    write_json_to_yaml_file("service.yaml", generic_service);
   }
 
   write_json_to_yaml_file("values.yaml", generic_values);
-  write_json_to_yaml_file("service.yaml", generic_service);
+  // write_json_to_yaml_file("service.yaml", generic_service);
   write_json_to_yaml_file("deployment.yaml", generic_deployment);
 
   return valid;
