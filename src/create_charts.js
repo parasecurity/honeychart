@@ -138,8 +138,8 @@ function init_values() {
   dionaea_values = {
     dionaea: {
       image: {
-        repository: "ghcr.io/kokol16/dionaea", // "dionaea_dionaea" latest  "ghcr.io/kokol16/dionaea" v1
-        tag: "v1",
+        repository: "ghcr.io/parasecurity/dionaea", // "dionaea_dionaea" latest  "ghcr.io/kokol16/dionaea" v1
+        tag: "latest",
         pullPolicy: "IfNotPresent",
       },
     },
@@ -147,7 +147,7 @@ function init_values() {
   cowrie_values = {
     cowrie: {
       image: {
-        repository: "cowrie_cowrie",
+        repository: "ghcr.io/parasecurity/cowrie",
         tag: "latest",
         pullPolicy: "IfNotPresent",
       },
@@ -157,8 +157,8 @@ function init_values() {
   conpot_values = {
     conpot: {
       image: {
-        repository: "ghcr.io/kokol16/conpot", //"ghcr.io/kokol16/conpot" "honeynet/conpot"
-        tag: "v2",
+        repository: "ghcr.io/parasecurity/conpot", //"ghcr.io/kokol16/conpot" "honeynet/conpot"
+        tag: "latest",
         pullPolicy: "IfNotPresent",
       },
     },
@@ -186,6 +186,9 @@ str = "\n";
 function generate_end() {
   return "{ { - end } }" + counter++;
 }
+function isEmptyObject(obj) {
+  return !Object.keys(obj).length;
+}
 let dionaea_deployment;
 let cowrie_deployment;
 let conpot_deployment;
@@ -198,8 +201,15 @@ function init_deployments() {
         '"{{ .Values.honeypots.dionaea.image.repository }}:{{ .Values.honeypots.dionaea.image.tag | default .Chart.AppVersion }}"',
       "  imagePullPolicy": "{{ .Values.honeypots.dionaea.image.pullPolicy }}",
       "  ports": {},
-
       "  resources": "{{- toYaml .Values.resources | nindent 12 }}",
+      "  {{- if .Values.honeypots.dionaea.env }}": "aa",
+      "  env": {
+         "  {{- range $key, $val := .Values.honeypots.dionaea.env }}": "aa",
+         "  - name": "{{ $val.name }}",
+         "    value": "{{ $val.value | quote }}",
+         "  {{- end }}": "aa"
+      },
+      "  {{- end }}": "aa"
     },
   };
   cowrie_deployment = {
@@ -212,6 +222,15 @@ function init_deployments() {
       "  imagePullPolicy3": "{{ .Values.honeypots.cowrie.image.pullPolicy }}",
       "  ports3": {},
       "  resources3": "{{- toYaml .Values.resources | nindent 12 }}",
+      "  {{- if .Values.honeypots.cowrie.env }}": "aa",
+      "  env3": {
+         "  {{- range $key, $val := .Values.honeypots.cowrie.env }}": "aa",
+         "  - name3": "{{ $val.name }}",
+         "    value3": "{{ $val.value | quote }}",
+         "  {{- end }}": "aa"
+      },
+      "  {{- end }}": "aa"
+      
     },
   };
 
@@ -225,6 +244,14 @@ function init_deployments() {
       "  imagePullPolicy2": "{{ .Values.honeypots.conpot.image.pullPolicy }}",
       "  ports2": {},
       "  resources2": "{{- toYaml .Values.resources | nindent 12 }}",
+      "  {{- if .Values.honeypots.conpot.env }}": "aa",
+      "  env2": {
+         "  {{- range $key, $val := .Values.honeypots.conpot.env }}": "aa",
+         "  - name2": "{{ $val.name }}",
+         "    value2": "{{ $val.value | quote }}",
+         "  {{- end }}": "aa"
+      },
+      "  {{- end }}": "aa"
     },
   };
 }
@@ -397,6 +424,25 @@ function add_ports_conpot(input) {
   return ports_conpot;
 }
 
+// if telnet is selected, adds environment variable on values.yaml
+function add_env_cowrie(input) {
+  if (is_cowrie_telnet_selected(input)){
+    return {
+      "- name": "COWRIE_TELNET_ENABLED",
+      "  value": "yes"
+    };
+  }
+  return {};
+}
+// no need to add environment variables for dionaea
+function add_env_dionaea(input) {
+  return {};
+}
+// no need to add environment variables for conpot
+function add_env_conpot(input) {
+  return {};
+}
+
 function write_json_to_yaml_file(filename, json_object) {
   let yamlStr = yaml.dump(json_object);
   yamlStr = create_same_names(yamlStr);
@@ -442,6 +488,8 @@ function create_same_names(yamlStr) {
       yamlStr = yamlStr.split("ports" + i).join("ports");
       yamlStr = yamlStr.split("volumeMounts" + i).join("volumeMounts");
       yamlStr = yamlStr.split("resources" + i).join("resources");
+      yamlStr = yamlStr.split("env" + i).join("env"); // for environment variables
+      yamlStr = yamlStr.split("value" + i).join("value"); // for environment variables
 
       yamlStr = yamlStr.split("hostPath" + i).join("hostPath");
     }
@@ -542,6 +590,7 @@ function fill_volumes_conpot(input) {
     conpot_deployment["volumes"]
   );
 }
+
 function create_dionaea_chart(honeypot) {
   //======== create values yaml file==================
   generic_values.honeypots["dionaea"] = {};
@@ -551,6 +600,11 @@ function create_dionaea_chart(honeypot) {
   Object.assign(generic_values.honeypots["dionaea"], dionaea_values.dionaea);
   ports_obj = add_ports_dionaea(honeypot);
   Object.assign(generic_values.honeypots["dionaea"]["ports"], ports_obj);
+  env_obj = add_env_dionaea(honeypot);
+  if (!isEmptyObject(env_obj)){
+    generic_values.honeypots["dionaea"]["env"] = {};
+    Object.assign(generic_values.honeypots["dionaea"]["env"], env_obj);
+  }
   //Object.assign(generic_values["volumes"], honeypot.volumes)
   //==================================================
 
@@ -584,6 +638,11 @@ function create_cowrie_chart(honeypot) {
   Object.assign(generic_values.honeypots["cowrie"], cowrie_values.cowrie);
   ports_obj = add_ports_cowrie(honeypot);
   Object.assign(generic_values.honeypots["cowrie"]["ports"], ports_obj);
+  env_obj = add_env_cowrie(honeypot);
+  if (!isEmptyObject(env_obj)){
+    generic_values.honeypots["cowrie"]["env"] = {};
+    Object.assign(generic_values.honeypots["cowrie"]["env"], env_obj);
+  }
   //==================================================
 
   //======== create service yaml file==================
@@ -611,6 +670,11 @@ function create_conpot_chart(honeypot) {
   Object.assign(generic_values.honeypots["conpot"], conpot_values.conpot);
   ports_obj = add_ports_conpot(honeypot);
   Object.assign(generic_values.honeypots["conpot"]["ports"], ports_obj);
+  env_obj = add_env_conpot(honeypot);
+  if (!isEmptyObject(env_obj)){
+    generic_values.honeypots["conpot"]["env"] = {};
+    Object.assign(generic_values.honeypots["conpot"]["env"], env_obj);
+  }
   //==================================================
 
   //======== create service yaml file==================
@@ -761,7 +825,31 @@ function has_specified_volumes_for_conpot(input) {
 function has_specified_volumes_for_dionaea(input) {
   return input.honeypots.dionaea.volumes.length > 0;
 }
-
+function is_honeypot_service_selected(input, honeypot, service) {
+  var selected_honeypot = ""
+  if (honeypot == "dionaea") {
+    selected_honeypot = input.honeypots.dionaea
+  }
+  else if (honeypot == "conpot") {
+    selected_honeypot = input.honeypots.conpot
+  }
+  else if (honeypot == "cowrie") {
+    selected_honeypot = input.honeypots.cowrie
+  }
+  else{
+    return false;
+  }
+  
+  for (let s = 0; s < selected_honeypot.services.length; s++){
+    if (service in selected_honeypot.services[s]){
+      return true;
+    }
+  }
+  return false;
+}
+function is_cowrie_telnet_selected(input){
+  return is_honeypot_service_selected(input, 'cowrie', 'telnet')
+}
 /*
 input =
 {
