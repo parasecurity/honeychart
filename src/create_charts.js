@@ -229,7 +229,7 @@ function init_deployments() {
          "    value3": "{{ $val.value | quote }}",
          "  {{- end }}": "aa"
       },
-      "  {{- end }}": "aa"
+      "  {{- end3 }}": "aa"
       
     },
   };
@@ -251,7 +251,7 @@ function init_deployments() {
          "    value2": "{{ $val.value | quote }}",
          "  {{- end }}": "aa"
       },
-      "  {{- end }}": "aa"
+      "  {{- end2 }}": "aa"
     },
   };
 }
@@ -490,7 +490,7 @@ function create_same_names(yamlStr) {
       yamlStr = yamlStr.split("resources" + i).join("resources");
       yamlStr = yamlStr.split("env" + i).join("env"); // for environment variables
       yamlStr = yamlStr.split("value" + i).join("value"); // for environment variables
-
+      yamlStr = yamlStr.split("end" + i).join("end"); // for environment variables
       yamlStr = yamlStr.split("hostPath" + i).join("hostPath");
     }
   }
