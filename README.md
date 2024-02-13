@@ -35,5 +35,12 @@ You can view the publication related to this repo on the following link(_to be a
 
 Consider citing the following paper:
 ```
-TO BE ADDED
+@inproceedings{kokolakis2022honeychart,
+  title={HoneyChart: Automated Honeypot Management over Kubernetes},
+  author={Kokolakis, George and Ntousakis, Grigoris and Karatsoris, Irodotos and Antonatos, Spiros and Athanatos, Manos and Ioannidis, Sotiris},
+  booktitle={European Symposium on Research in Computer Security},
+  pages={321--328},
+  year={2022},
+  organization={Springer}
+}
 ```
