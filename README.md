@@ -29,7 +29,7 @@ node server.js
 
 ## Paper 
 
-You can view the publication related to this repo on the following link(_to be added_).
+You can view the publication related to this repo on the following [link](https://www.ntousakis.com/honeychart-cps4cip-2022.pdf).
 
 ## Citing
 
