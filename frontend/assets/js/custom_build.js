@@ -327,7 +327,7 @@ function addDionaea() {
       // When LoadBalancer is selected
       var ipForm = document.getElementById("dio-ip-field").value;
       // Validate IP address
-      if (!validateIp(ipForm, "dio-err-div", "dio-error-msg")) {
+      if (!validateManyIpRanges(ipForm, "dio-err-div", "dio-error-msg")) {
         return;
       }
       node = 0;
@@ -513,7 +513,7 @@ function addConpot() {
       // When LoadBalancer is selected
       var ipForm = document.getElementById("conpot-ip-field").value;
       // Validate IP address
-      if (!validateIp(ipForm, "conpot-err-div", "conpot-error-msg")) {
+      if (!validateManyIpRanges(ipForm, "conpot-err-div", "conpot-error-msg")) {
         return;
       }
       node = 0;
@@ -617,7 +617,7 @@ function addCowrie() {
       // When LoadBalancer is selected
       var ipForm = document.getElementById("cowrie-ip-field").value;
       // Validate IP address
-      if (!validateIp(ipForm, "cowrie-err-div", "cowrie-error-msg")) {
+      if (!validateManyIpRanges(ipForm, "cowrie-err-div", "cowrie-error-msg")) {
         return;
       }
       node = 0;

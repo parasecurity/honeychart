@@ -31,6 +31,28 @@ function validateReplicas(num, div, mes) {
   }
 }
 
+// Check for valid IP address ranges
+function validateManyIpRanges(num, div, mes){
+  const num_ranges = num.split(',')
+  for (let j=0; j < num_ranges.length; j++){
+    if(!validateIpRange(num_ranges[j].trim(), div, mes)){
+      return false;
+    }
+  }
+  return true
+}
+
+// Check for valid IP address range
+function validateIpRange(num, div, mes) {
+  const num_range = num.split('-');
+  for (let i=0; i < num_range.length; i++){
+    if(!validateIp(num_range[i].trim(), div, mes)){
+      return false;
+    }
+  }
+  return true;
+}
+
 // Check for valid IP address
 function validateIp(num, div, mes) {
   var err = document.getElementById(mes);
